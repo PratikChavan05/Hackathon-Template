@@ -8,16 +8,33 @@ export const UserProvider = ({ children }) => {
   const [isAuth, setIsAuth] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
 
-  async function loginUser(email, password, navigate, fetchPins) {
+  const getDashboardPath = (role) => {
+    switch (role) {
+      case "role1":
+        return "/role1";
+      case "role2":
+        return "/role2";
+      case "role3":
+        return "/role3";
+      case "role4":
+        return "/role4";
+      default:
+        return "/";
+    }
+  };
+
+  async function loginUser(email, password, navigate) {
     setBtnLoading(true);
     try {
-      const { data } = await axios.post("/api/user/login", { email, password });
+      const { data } = await axios.post("/api/user/login", {
+        email,
+        password,
+      });
       toast.success(data.message);
       setUser(data.user);
       setIsAuth(true);
       setBtnLoading(false);
-      navigate("/");
-      fetchPins();
+      navigate(getDashboardPath(data.user.role));
     } catch (error) {
       toast.error(error.response.data.message);
       setBtnLoading(false);
@@ -55,11 +72,17 @@ export const UserProvider = ({ children }) => {
   }
   }
 
-  async function registerUser(name, email, password, navigate) {
+  async function registerUser(name, email, password, role, navigate) {
     setBtnLoading(true);
     try {
-      const { data } = await axios.post("/api/user/register", { name, email, password });
+      const { data } = await axios.post("/api/user/register", {
+        name,
+        email,
+        password,
+        role,
+      });
       toast.success(data.message);
+      console.log(data);
       const token=data.token
       setBtnLoading(false);
       navigate("/verify/"+token);
@@ -70,16 +93,17 @@ export const UserProvider = ({ children }) => {
     }
   }
 
-  async function verify(token, otp,navigate, fetchPins) {
+  async function verify(token, otp, navigate) {
     setBtnLoading(true);
     try {
-      const { data } = await axios.post("/api/user/verifyOtp/"+token, {otp });
+      const { data } = await axios.post(`/api/user/verifyOtp/${token}`, {
+        otp,
+      });
       toast.success(data.message);
       setUser(data.user);
       setIsAuth(true);
       setBtnLoading(false);
-      navigate("/");
-      fetchPins();
+      navigate(getDashboardPath(data.user.role));
     } catch (error) {
       toast.error(error.response.data.message);
       setBtnLoading(false);

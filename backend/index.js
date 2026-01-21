@@ -11,7 +11,7 @@ import multer from 'multer';
 import fs from 'fs';
 import FormData from 'form-data';
 dotenv.config();
-const port=process.env.PORT || 5000;
+const port=process.env.PORT || 5005;
 
 cloudinary.v2.config({
     cloud_name: process.env.Cloud_Name,

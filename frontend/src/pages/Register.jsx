@@ -9,7 +9,8 @@ const Register = () => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
-        password: ''
+        password: '',
+        role: 'role1'
     })
     const [showPassword, setShowPassword] = useState(false)
     const [formError, setFormError] = useState("")
@@ -50,7 +51,7 @@ const Register = () => {
     const submitHandler = (e) => {
         e.preventDefault()
         
-        const { name, email, password } = formData
+        const { name, email, password, role } = formData
         
         // Enhanced validation
         if (!name.trim() || !email.trim() || !password.trim()) {
@@ -69,7 +70,7 @@ const Register = () => {
         }
         
         setFormError("")
-        registerUser(name, email, password, navigate)
+        registerUser(name, email, password, role, navigate)
     }
     
     // Animation variants
@@ -151,6 +152,23 @@ const Register = () => {
                                 aria-required="true"
                             />
                         </div>
+                    </motion.div>
+
+                    <motion.div className='mb-4' variants={itemVariants}>
+                        <label htmlFor="role" className='block text-sm font-medium text-gray-300 mb-1'>
+                            ROLE
+                        </label>
+                        <select
+                            id="role"
+                            value={formData.role}
+                            onChange={handleChange}
+                            className='w-full py-2 px-3 border border-gray-700 bg-gray-900 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#50c878] focus:border-transparent'
+                        >
+                            <option value="role1">Role 1</option>
+                            <option value="role2">Role 2</option>
+                            <option value="role3">Role 3</option>
+                            <option value="role4">Role 4</option>
+                        </select>
                     </motion.div>
                     
                     <motion.div className='mb-4' variants={itemVariants}>

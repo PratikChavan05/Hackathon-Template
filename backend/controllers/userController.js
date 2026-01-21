@@ -16,7 +16,7 @@ dotenv.config();
 const TEMP_USERS = {}; 
 
 export const registerWithOtp = TryCatch(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
    
    if (Array.isArray(email) || !validator.isEmail(email)) {
@@ -37,6 +37,11 @@ export const registerWithOtp = TryCatch(async (req, res) => {
   TEMP_USERS[email] = {
     name,
     password,
+    // Store role temporarily for use after OTP verification
+    role:
+      role && ["role1", "role2", "role3", "role4"].includes(role)
+        ? role
+        : "role1",
     otp,
     expiresAt: Date.now() + 5 * 60 * 1000, // OTP valid for 5 minutes
   };
@@ -101,6 +106,7 @@ export const verifyOtpAndRegister = TryCatch(async (req, res) => {
       name: tempUser.name,
       email,
       password: hashPassword,
+      role: tempUser.role,
     });
 
     delete TEMP_USERS[email]; //
