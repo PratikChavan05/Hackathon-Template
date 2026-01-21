@@ -29,9 +29,18 @@ app.use(cookieParser());
 
 import userRoutes from './routes/userRoutes.js';
 
-app.use('/api/user', userRoutes);       
+app.use('/api/user', userRoutes);  
 
-app.listen(port , ()=>{
-    console.log(`Server is running on http://localhost:${port}`);
-    connectDb();
-})
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+app.get(/^(?!\/api).*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+});
+
+connectDb().then(() => {
+  app.listen(process.env.PORT || port, () => {
+    console.log(`Server is running on http://localhost:${process.env.PORT || port}`);
+  });
+});
+
